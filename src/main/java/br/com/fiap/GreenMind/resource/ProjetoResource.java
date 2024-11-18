@@ -24,6 +24,7 @@ public class ProjetoResource {
         this.modelMapper = new ModelMapper();
     }
 
+    // MÉTODO POST (Cadastrar Projeto)
     @POST
     public Response cadastrarProjeto(ProjetoDto dto, @Context UriInfo uriInfo) {
         try {
@@ -39,18 +40,51 @@ public class ProjetoResource {
         }
     }
 
+    // MÉTODO GET (Listar Projetos)
     @GET
     public Response listarProjetos() throws SQLException {
         List<Projeto> projetos = projetoService.listarProjetos();
         return Response.ok(projetos).build();
     }
 
+    // MÉTODO GET WITH ID (Buscar Projeto por ID)
     @GET
     @Path("/{id}")
-    public Response buscarProjetoPorId(@PathParam("id") Long id) throws SQLException {
-        Optional<Projeto> projetoOpt = projetoService.buscarProjetoPorId(id);
-        return projetoOpt.map(Response::ok)
-                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).entity("Projeto não encontrado"))
-                .build();
+    public Response buscarProjetoPorId(@PathParam("id") Long id) {
+        try {
+            Optional<Projeto> projetoOpt = projetoService.buscarProjetoPorId(id);
+            if (projetoOpt.isPresent()) {
+                return Response.ok(projetoOpt.get()).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Projeto não encontrado").build();
+            }
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar projeto: " + e.getMessage()).build();
+        }
+    }
+
+    // MÉTODO PUT (Alterar Projeto)
+    @PUT
+    @Path("/{id}")
+    public Response alterarProjeto(ProjetoDto dto, @PathParam("id") Long id) {
+        try {
+            projetoService.alterarProjeto(dto, id);
+            return Response.ok("Projeto atualizado com sucesso!").build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao atualizar projeto: " + e.getMessage()).build();
+        }
+    }
+
+    // MÉTODO DELETE (Excluir Projeto)
+    @DELETE
+    @Path("/{id}")
+    public Response excluirProjeto(@PathParam("id") Long id) {
+        try {
+            projetoService.excluirProjeto(id);
+            return Response.ok("Projeto excluído com sucesso!").build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao excluir projeto: " + e.getMessage()).build();
+        }
     }
 }

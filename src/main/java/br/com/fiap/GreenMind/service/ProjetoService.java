@@ -17,7 +17,6 @@ public class ProjetoService {
         this.projetoDao = new ProjetoDao();
     }
 
-    // MÉTODO CREATE (Salvar Projeto)
     public void salvarProjeto(Projeto projeto, String nomeCategoria) throws SQLException {
         CategoriaDao categoriaDao = new CategoriaDao();
         Optional<Long> categoriaIdOpt = categoriaDao.buscarIdPorNome(nomeCategoria);
