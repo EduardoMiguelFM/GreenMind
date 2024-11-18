@@ -61,7 +61,7 @@ public class CategoriaResource {
     public Response alterarCategoria(CategoriaDto dto, @PathParam("id") Long id) {
         try {
             Categoria categoria = modelMapper.map(dto, Categoria.class);
-            categoria.setId(id);
+            categoria.setIdCat(id);
             categoriaService.alterarCategoria(categoria);
             return Response.ok("Categoria atualizada com sucesso!").build();
         } catch (SQLException e) {

@@ -16,7 +16,7 @@ public class CategoriaDao {
         String sql = "INSERT INTO categorias (nome_cat) VALUES (?)";
 
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setString(1, categoria.getNome());
+        stmt.setString(1, categoria.getNomeCat());
         stmt.executeUpdate();
 
         stmt.close();
@@ -77,8 +77,8 @@ public class CategoriaDao {
         String sql = "UPDATE categorias SET nome_cat = ? WHERE id_cat\" = ?";
 
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setString(1, categoria.getNome());
-        stmt.setLong(2, categoria.getId());
+        stmt.setString(1, categoria.getNomeCat());
+        stmt.setLong(2, categoria.getIdCat());
         stmt.executeUpdate();
 
         stmt.close();

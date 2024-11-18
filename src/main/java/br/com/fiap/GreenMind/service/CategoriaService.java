@@ -20,7 +20,7 @@ public class CategoriaService {
     }
 
     public void alterarCategoria(Categoria categoria) throws SQLException {
-        Optional<Categoria> categoriaExistenteOpt = categoriaDao.buscarCategoriaPorId(categoria.getId());
+        Optional<Categoria> categoriaExistenteOpt = categoriaDao.buscarCategoriaPorId(categoria.getIdCat());
 
         if (categoriaExistenteOpt.isEmpty()) {
             throw new SQLException("Categoria não encontrada para atualização");
