@@ -88,10 +88,10 @@ public class CategoriaDao {
     // MÉTODO DELETE (Excluir Categorias)
     public void excluirCategoria(Long id) throws SQLException {
         Connection connection = ConnectionFactory.obterConexao();
-        String sql = "DELETE FROM categorias WHERE id_cat\" = ?";
+        String sql = "DELETE FROM categorias WHERE id_cat = ?";
 
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setLong(1, id);
+        stmt.setLong(1, id); //
         stmt.executeUpdate();
 
         stmt.close();

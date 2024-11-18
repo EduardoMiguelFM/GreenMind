@@ -71,9 +71,12 @@ public class CategoriaResource {
 
     @DELETE
     @Path("/{id}")
-    public Response excluirCategoria(@PathParam("id") Long id) throws SQLException {
-        categoriaService.excluirCategoria(id);
-        return Response.ok("Categoria excluída com sucesso!").build();
-    }
-}
-
+    public Response excluirCategoria(@PathParam("id") Long id) {
+        try {
+            categoriaService.excluirCategoria(id);
+            return Response.ok("Categoria excluída com sucesso!").build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao excluir categoria: " + e.getMessage()).build();
+        }
+    }}

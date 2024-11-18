@@ -5,6 +5,7 @@ import br.com.fiap.GreenMind.model.Contato;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class ContatoService {
 
@@ -25,5 +26,11 @@ public class ContatoService {
     public void excluirContato(Long id) throws SQLException {
         contatoDao.excluirContato(id);
     }
+
+    // MÉTODO READ (Buscar Contato por ID)
+    public Optional<Contato> buscarContatoPorId(Long id) throws SQLException {
+        return contatoDao.buscarContatoPorId(id);
+    }
+
 }
 

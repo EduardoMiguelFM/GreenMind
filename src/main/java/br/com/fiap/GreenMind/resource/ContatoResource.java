@@ -62,4 +62,18 @@ public class ContatoResource {
                     .entity("Erro ao excluir contato: " + e.getMessage()).build();
         }
     }
+
+    // MÉTODO GET WITH ID (Buscar Contato por ID)
+    @GET
+    @Path("/{id}")
+    public Response buscarContatoPorId(@PathParam("id") Long id) {
+        try {
+            Optional<Contato> contatoOpt = contatoService.buscarContatoPorId(id);
+            return contatoOpt.map(Response::ok)
+                    .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).entity("Contato não encontrado")).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar contato: " + e.getMessage()).build();
+        }
+    }
 }

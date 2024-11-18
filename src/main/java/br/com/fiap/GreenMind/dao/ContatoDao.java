@@ -6,6 +6,7 @@ import br.com.fiap.GreenMind.model.Contato;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ContatoDao {
 
@@ -51,6 +52,38 @@ public class ContatoDao {
         stmt.close();
         ConnectionFactory.fecharConexao(connection);
         return contatos;
+    }
+
+    // MÉTODO READ (Buscar Contato por ID)
+    public Optional<Contato> buscarContatoPorId(Long id) throws SQLException {
+        Connection connection = ConnectionFactory.obterConexao();
+        String sql = "SELECT * FROM contatos WHERE id_contato = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setLong(1, id);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            Contato contato = new Contato(
+                    rs.getLong("id_contato"),
+                    rs.getString("nome_contato"),
+                    rs.getString("email_contato"),
+                    rs.getString("telefone_contato"),
+                    rs.getString("mensagem"),
+                    rs.getDate("data_envio")
+            );
+
+            rs.close();
+            stmt.close();
+            ConnectionFactory.fecharConexao(connection);
+            return Optional.of(contato);
+        }
+
+        rs.close();
+        stmt.close();
+        ConnectionFactory.fecharConexao(connection);
+        return Optional.empty(); // Retorna vazio se não encontrar
     }
 
     // MÉTODO DELETE (Excluir Contato)
