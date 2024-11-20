@@ -62,4 +62,9 @@ public class ProjetoService {
     public void excluirProjeto(Long id) throws SQLException {
         projetoDao.excluirProjeto(id);
     }
+
+    // MÉTODO READ (Listar Projetos por Categoria)
+    public List<Projeto> listarProjetosPorCategoria(String nomeCategoria) throws SQLException {
+        return projetoDao.listarProjetosPorCategoria(nomeCategoria);
+    }
 }

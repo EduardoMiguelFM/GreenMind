@@ -87,4 +87,21 @@ public class ProjetoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao excluir projeto: " + e.getMessage()).build();
         }
     }
+
+    // MÉTODO GET (Listar Projetos por Categoria)
+    @GET
+    @Path("/categoria/{nomeCategoria}")
+    public Response listarProjetosPorCategoria(@PathParam("nomeCategoria") String nomeCategoria) {
+        try {
+            List<Projeto> projetos = projetoService.listarProjetosPorCategoria(nomeCategoria);
+            if (projetos.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Nenhum projeto encontrado para a categoria: " + nomeCategoria).build();
+            }
+            return Response.ok(projetos).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar projetos por categoria: " + e.getMessage()).build();
+        }
+    }
 }

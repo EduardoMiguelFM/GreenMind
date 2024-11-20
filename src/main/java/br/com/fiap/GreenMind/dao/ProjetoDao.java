@@ -119,4 +119,40 @@ public class ProjetoDao {
         stmt.close();
         ConnectionFactory.fecharConexao(connection);
     }
+
+    // MÉTODO READ (Listar Projetos por Categoria)
+    public List<Projeto> listarProjetosPorCategoria(String nomeCategoria) throws SQLException {
+        Connection connection = ConnectionFactory.obterConexao();
+
+        // Consulta para buscar projetos com base no nome da categoria
+        String sql = "SELECT p.id_proj, p.nome_proj, p.descricao, p.detalhes, p.imagem_url, c.nome_cat AS nome_categoria, p.data_criacao " +
+                "FROM projetos p " +
+                "JOIN categorias c ON p.categoria_id = c.id_cat " +
+                "WHERE c.nome_cat = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, nomeCategoria);
+
+        ResultSet rs = stmt.executeQuery();
+
+        List<Projeto> projetos = new ArrayList<>();
+        while (rs.next()) {
+            Projeto projeto = new Projeto(
+                    rs.getLong("id_proj"),
+                    rs.getString("nome_proj"),
+                    rs.getString("descricao"),
+                    rs.getString("detalhes"),
+                    rs.getString("imagem_url"),
+                    rs.getString("nome_categoria"),
+                    rs.getDate("data_criacao")
+            );
+            projetos.add(projeto);
+        }
+
+        rs.close();
+        stmt.close();
+        ConnectionFactory.fecharConexao(connection);
+
+        return projetos;
+    }
 }
