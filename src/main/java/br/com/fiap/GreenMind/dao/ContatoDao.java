@@ -83,7 +83,7 @@ public class ContatoDao {
         rs.close();
         stmt.close();
         ConnectionFactory.fecharConexao(connection);
-        return Optional.empty(); // Retorna vazio se não encontrar
+        return Optional.empty();
     }
 
     // MÉTODO DELETE (Excluir Contato)

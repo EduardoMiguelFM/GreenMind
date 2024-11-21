@@ -13,4 +13,6 @@ public class ProjetoDto {
     private String detalhes;
     private String imagemUrl;
     private String categoriaId;
+    private String nomeAutor;
+    private String emailAutor;
 }

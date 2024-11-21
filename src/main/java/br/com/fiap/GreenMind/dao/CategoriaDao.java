@@ -120,7 +120,7 @@ public class CategoriaDao {
         rs.close();
         stmt.close();
         ConnectionFactory.fecharConexao(connection);
-        return Optional.empty(); // Retorna vazio se não encontrar a categoria
+        return Optional.empty();
     }
 }
 

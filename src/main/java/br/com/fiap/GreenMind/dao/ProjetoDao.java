@@ -13,7 +13,8 @@ public class ProjetoDao {
     // MÉTODO CREATE (Salvar Projeto)
     public void salvarProjeto(Projeto projeto) throws SQLException {
         Connection connection = ConnectionFactory.obterConexao();
-        String sql = "INSERT INTO projetos (nome_proj, descricao, detalhes, imagem_url, categoria_id, data_criacao) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO projetos (nome_proj, descricao, detalhes, imagem_url, categoria_id, nome_autor, email_autor, data_criacao) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, projeto.getNomeProj());
@@ -21,7 +22,10 @@ public class ProjetoDao {
         stmt.setString(3, projeto.getDetalhes());
         stmt.setString(4, projeto.getImagemUrl());
         stmt.setString(5, projeto.getCategoriaId());
-        stmt.setDate(6, new java.sql.Date(System.currentTimeMillis())); // Data atual
+        stmt.setString(6, projeto.getNomeAutor());
+        stmt.setString(7, projeto.getEmailAutor());
+        stmt.setDate(8, new java.sql.Date(System.currentTimeMillis())); // Data atual
+
         stmt.executeUpdate();
 
         stmt.close();
@@ -31,7 +35,8 @@ public class ProjetoDao {
     // MÉTODO READ (Listar todos os Projetos)
     public List<Projeto> listarProjetos() throws SQLException {
         Connection connection = ConnectionFactory.obterConexao();
-        String sql = "SELECT p.id_proj, p.nome_proj, p.descricao, p.detalhes, p.imagem_url, c.nome_cat AS nome_categoria, p.data_criacao " +
+        String sql = "SELECT p.id_proj, p.nome_proj, p.descricao, p.detalhes, p.imagem_url, c.nome_cat AS nome_categoria, " +
+                "p.nome_autor, p.email_autor, p.data_criacao " +
                 "FROM projetos p " +
                 "JOIN categorias c ON p.categoria_id = c.id_cat";
 
@@ -47,6 +52,8 @@ public class ProjetoDao {
             projeto.setDetalhes(rs.getString("detalhes"));
             projeto.setImagemUrl(rs.getString("imagem_url"));
             projeto.setCategoriaId(rs.getString("nome_categoria"));
+            projeto.setNomeAutor(rs.getString("nome_autor"));
+            projeto.setEmailAutor(rs.getString("email_autor"));
             projeto.setDataCriacao(rs.getDate("data_criacao"));
             projetos.add(projeto);
         }
@@ -65,6 +72,7 @@ public class ProjetoDao {
 
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setLong(1, id);
+
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
@@ -75,24 +83,29 @@ public class ProjetoDao {
                     rs.getString("detalhes"),
                     rs.getString("imagem_url"),
                     rs.getString("categoria_id"),
+                    rs.getString("nome_autor"),
+                    rs.getString("email_autor"),
                     rs.getDate("data_criacao")
             );
+
             rs.close();
             stmt.close();
             ConnectionFactory.fecharConexao(connection);
-            return Optional.of(projeto); // Retorna o projeto encontrado.
+            return Optional.of(projeto);
         }
 
         rs.close();
         stmt.close();
         ConnectionFactory.fecharConexao(connection);
-        return Optional.empty(); // Retorna vazio se o projeto não for encontrado.
+        return Optional.empty();
     }
+
 
     // MÉTODO UPDATE (Alterar Projeto)
     public void alterarProjeto(Projeto projeto) throws SQLException {
         Connection connection = ConnectionFactory.obterConexao();
-        String sql = "UPDATE projetos SET nome_proj = ?, descricao = ?, detalhes = ?, imagem_url = ?, categoria_id = ? WHERE id_proj = ?";
+        String sql = "UPDATE projetos SET nome_proj = ?, descricao = ?, detalhes = ?, imagem_url = ?, categoria_id = ?, " +
+                "nome_autor = ?, email_autor = ? WHERE id_proj = ?";
 
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, projeto.getNomeProj());
@@ -100,12 +113,16 @@ public class ProjetoDao {
         stmt.setString(3, projeto.getDetalhes());
         stmt.setString(4, projeto.getImagemUrl());
         stmt.setString(5, projeto.getCategoriaId());
-        stmt.setLong(6, projeto.getIdProj()); // Identifica o registro pelo ID.
+        stmt.setString(6, projeto.getNomeAutor());
+        stmt.setString(7, projeto.getEmailAutor());
+        stmt.setLong(8, projeto.getIdProj()); // Identifica o registro pelo ID
+
         stmt.executeUpdate();
 
         stmt.close();
         ConnectionFactory.fecharConexao(connection);
     }
+
 
     // MÉTODO DELETE (Excluir Projeto)
     public void excluirProjeto(Long id) throws SQLException {
@@ -113,7 +130,7 @@ public class ProjetoDao {
         String sql = "DELETE FROM projetos WHERE id_proj = ?";
 
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setLong(1, id); // Configura o ID do projeto a ser excluído.
+        stmt.setLong(1, id);
         stmt.executeUpdate();
 
         stmt.close();
@@ -124,8 +141,8 @@ public class ProjetoDao {
     public List<Projeto> listarProjetosPorCategoria(String nomeCategoria) throws SQLException {
         Connection connection = ConnectionFactory.obterConexao();
 
-        // Consulta para buscar projetos com base no nome da categoria
-        String sql = "SELECT p.id_proj, p.nome_proj, p.descricao, p.detalhes, p.imagem_url, c.nome_cat AS nome_categoria, p.data_criacao " +
+        String sql = "SELECT p.id_proj, p.nome_proj, p.descricao, p.detalhes, p.imagem_url, c.nome_cat AS nome_categoria, " +
+                "p.nome_autor, p.email_autor, p.data_criacao " +
                 "FROM projetos p " +
                 "JOIN categorias c ON p.categoria_id = c.id_cat " +
                 "WHERE c.nome_cat = ?";
@@ -144,6 +161,8 @@ public class ProjetoDao {
                     rs.getString("detalhes"),
                     rs.getString("imagem_url"),
                     rs.getString("nome_categoria"),
+                    rs.getString("nome_autor"),
+                    rs.getString("email_autor"),
                     rs.getDate("data_criacao")
             );
             projetos.add(projeto);
@@ -155,4 +174,5 @@ public class ProjetoDao {
 
         return projetos;
     }
+
 }

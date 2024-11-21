@@ -24,6 +24,7 @@ public class CategoriaResource {
         this.modelMapper = new ModelMapper();
     }
 
+    //MÉTODO POST (Cadastrar Categoria)
     @POST
     public Response cadastrarCategoria(CategoriaDto dto, @Context UriInfo uriInfo) throws SQLException {
         try {
@@ -34,13 +35,14 @@ public class CategoriaResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao adicionar categoria: " + e.getMessage()).build();
         }
     }
-
+    //MÉTODO GET (LISTAR Categoria)
     @GET
     public Response listarCategorias() throws SQLException {
         List<Categoria> categorias = categoriaService.listarCategorias();
         return Response.ok(categorias).build();
     }
 
+    //MÉTODO GET (BuscarCategoriaPorId Categoria)
     @GET
     @Path("/{id}")
     public Response buscarCategoriaPorId(@PathParam("id") Long id) {
@@ -56,6 +58,8 @@ public class CategoriaResource {
         }
     }
 
+
+    //MÉTODO PUT (ALterar Categoria)
     @PUT
     @Path("/{id}")
     public Response alterarCategoria(CategoriaDto dto, @PathParam("id") Long id) {
@@ -69,6 +73,7 @@ public class CategoriaResource {
         }
     }
 
+    //MÉTODO DELETE (Excluir Categoria)
     @DELETE
     @Path("/{id}")
     public Response excluirCategoria(@PathParam("id") Long id) {
@@ -79,4 +84,5 @@ public class CategoriaResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao excluir categoria: " + e.getMessage()).build();
         }
-    }}
+    }
+}
