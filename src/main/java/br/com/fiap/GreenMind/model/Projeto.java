@@ -17,6 +17,7 @@ public class Projeto {
     private String nomeAutor;
     private String emailAutor;
     private Date dataCriacao;
+    Categoria categoria;
 
     public Projeto(Long idProj, String nomeProj, String descricao, String detalhes, String imagemUrl, String categoriaId, String nomeAutor, String emailAutor, Date dataCriacao) {
         this.idProj = idProj;
