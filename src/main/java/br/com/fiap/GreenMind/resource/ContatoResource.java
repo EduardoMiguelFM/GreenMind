@@ -29,6 +29,8 @@ public class ContatoResource {
     @POST
     public Response salvarContato(@Valid ContatoDto dto, @Context UriInfo uriInfo) {
         try {
+            System.out.println("Dados recebidos para salvar contato: " + dto);
+
             Contato contato = modelMapper.map(dto, Contato.class);
             contatoService.salvarContato(contato);
 
@@ -37,6 +39,7 @@ public class ContatoResource {
 
             return Response.created(uriBuilder.build()).entity(contato).build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao salvar contato: " + e.getMessage()).build();
         }

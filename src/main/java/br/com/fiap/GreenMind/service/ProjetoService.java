@@ -3,6 +3,7 @@ package br.com.fiap.GreenMind.service;
 import br.com.fiap.GreenMind.dao.CategoriaDao;
 import br.com.fiap.GreenMind.dao.ProjetoDao;
 import br.com.fiap.GreenMind.dto.ProjetoDto;
+import br.com.fiap.GreenMind.model.Categoria;
 import br.com.fiap.GreenMind.model.Projeto;
 
 import java.sql.SQLException;
@@ -18,13 +19,17 @@ public class ProjetoService {
     }
 
     public void salvarProjeto(Projeto projeto, String nomeCategoria) throws SQLException {
+        System.out.println("Nome da categoria recebido: " + nomeCategoria);
+
         CategoriaDao categoriaDao = new CategoriaDao();
         Optional<Long> categoriaIdOpt = categoriaDao.buscarIdPorNome(nomeCategoria);
+
         if (categoriaIdOpt.isEmpty()) {
+            System.err.println("Categoria não encontrada no banco de dados: " + nomeCategoria);
             throw new IllegalArgumentException("Categoria não encontrada: " + nomeCategoria);
         }
-        projeto.setCategoriaId(String.valueOf(categoriaIdOpt.get()));
 
+        projeto.setCategoriaId(String.valueOf(categoriaIdOpt.get()));
         projetoDao.salvarProjeto(projeto);
     }
 

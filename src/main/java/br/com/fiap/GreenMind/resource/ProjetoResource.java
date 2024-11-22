@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Path("/projetos")
@@ -35,8 +36,14 @@ public class ProjetoResource {
             uri.path(String.valueOf(projeto.getIdProj()));
 
             return Response.created(uri.build()).entity(projeto).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", e.getMessage()))
+                    .build();
         } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao salvar projeto: " + e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error", e.getMessage()))
+                    .build();
         }
     }
 

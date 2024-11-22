@@ -101,6 +101,31 @@ public class ProjetoDao {
     }
 
 
+    // Método para buscar o ID da categoria pelo nome
+    public Optional<Long> buscarIdPorNome(String nomeCategoria) throws SQLException {
+        Connection connection = ConnectionFactory.obterConexao();
+        String sql = "SELECT id_cat FROM categorias WHERE nome_cat = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, nomeCategoria);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            Long id = rs.getLong("id_cat");
+            rs.close();
+            stmt.close();
+            ConnectionFactory.fecharConexao(connection);
+            return Optional.of(id);
+        }
+
+        rs.close();
+        stmt.close();
+        ConnectionFactory.fecharConexao(connection);
+        return Optional.empty();
+    }
+
+
     // MÉTODO UPDATE (Alterar Projeto)
     public void alterarProjeto(Projeto projeto) throws SQLException {
         Connection connection = ConnectionFactory.obterConexao();

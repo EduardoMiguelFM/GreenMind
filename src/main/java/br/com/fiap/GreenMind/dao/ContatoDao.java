@@ -12,6 +12,8 @@ public class ContatoDao {
 
     // MÉTODO CREATE (Salvar Contato)
     public void salvarContato(Contato contato) throws SQLException {
+        System.out.println("Inserindo contato no banco: " + contato);
+
         Connection connection = ConnectionFactory.obterConexao();
         String sql = "INSERT INTO contatos (nome_contato, email_contato, telefone_contato, mensagem, data_envio) VALUES (?, ?, ?, ?, ?)";
 
