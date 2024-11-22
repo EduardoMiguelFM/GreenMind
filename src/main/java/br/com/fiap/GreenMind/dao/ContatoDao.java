@@ -12,22 +12,21 @@ public class ContatoDao {
 
     // MÉTODO CREATE (Salvar Contato)
     public void salvarContato(Contato contato) throws SQLException {
-        System.out.println("Inserindo contato no banco: " + contato);
+        try (Connection connection = ConnectionFactory.obterConexao()) {
+            String sql = "INSERT INTO contatos (nome_contato, email_contato, telefone_contato, mensagem, data_envio) VALUES (?, ?, ?, ?, ?)";
 
-        Connection connection = ConnectionFactory.obterConexao();
-        String sql = "INSERT INTO contatos (nome_contato, email_contato, telefone_contato, mensagem, data_envio) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, contato.getNomeContato());
+            stmt.setString(2, contato.getEmailContato());
+            stmt.setString(3, contato.getTelefoneContato());
+            stmt.setString(4, contato.getMensagem());
+            stmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
 
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setString(1, contato.getNomeContato());
-        stmt.setString(2, contato.getEmailContato());
-        stmt.setString(3, contato.getTelefoneContato());
-        stmt.setString(4, contato.getMensagem());
-        stmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
-
-        stmt.executeUpdate();
-
-        stmt.close();
-        ConnectionFactory.fecharConexao(connection);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar contato no banco de dados: " + e.getMessage());
+            throw e;
+        }
     }
 
     // MÉTODO READ (Listar todos os Contatos)
